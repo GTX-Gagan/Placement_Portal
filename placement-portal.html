@@ -1,0 +1,2416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>NexusPlace | Intelligent Placement Portal 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-void: #050810;
+  --bg-deep: #080c18;
+  --bg-surface: #0d1225;
+  --bg-elevated: #111827;
+  --bg-card: rgba(13,18,37,0.85);
+  --border-subtle: rgba(0,245,255,0.08);
+  --border-glow: rgba(0,245,255,0.25);
+  --border-active: rgba(0,245,255,0.6);
+  --cyan: #00f5ff;
+  --cyan-dim: rgba(0,245,255,0.15);
+  --cyan-glow: rgba(0,245,255,0.35);
+  --amber: #ffb347;
+  --amber-dim: rgba(255,179,71,0.12);
+  --violet: #a78bfa;
+  --violet-dim: rgba(167,139,250,0.12);
+  --green: #10ffb0;
+  --green-dim: rgba(16,255,176,0.12);
+  --red: #ff4d6a;
+  --red-dim: rgba(255,77,106,0.12);
+  --text-primary: #e8edf8;
+  --text-secondary: #7a8aa0;
+  --text-muted: #3d4f66;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-void);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Animated aurora background */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 20%, rgba(0,245,255,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 80%, rgba(167,139,250,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 50% 50%, rgba(255,179,71,0.02) 0%, transparent 70%);
+  pointer-events:none;
+  animation: auroraShift 12s ease-in-out infinite alternate;
+}
+
+@keyframes auroraShift {
+  0%   { opacity:0.6; transform:scale(1) rotate(0deg); }
+  50%  { opacity:1; transform:scale(1.05) rotate(1deg); }
+  100% { opacity:0.7; transform:scale(0.97) rotate(-1deg); }
+}
+
+/* Noise texture overlay */
+body::after {
+  content:'';
+  position:fixed; inset:0; z-index:1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events:none; opacity:0.4;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:var(--bg-deep); }
+::-webkit-scrollbar-thumb { background:var(--cyan-glow); border-radius:10px; }
+
+/* ─── NAVBAR ─── */
+.navbar {
+  position:sticky; top:0; z-index:1000;
+  background: rgba(5,8,16,0.92);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0 2.5rem;
+  height: 64px;
+  display:flex; justify-content:space-between; align-items:center;
+  box-shadow: 0 1px 0 var(--border-subtle), 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.nav-logo {
+  display:flex; align-items:center; gap:10px;
+}
+
+.logo-mark {
+  width:32px; height:32px;
+  background: conic-gradient(from 180deg at 50% 50%, var(--cyan) 0deg, var(--violet) 180deg, var(--amber) 360deg);
+  border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:800; color:#000;
+  font-family: var(--font-display);
+  animation: logoSpin 8s linear infinite;
+  box-shadow: 0 0 16px var(--cyan-glow);
+}
+
+@keyframes logoSpin {
+  to { filter: hue-rotate(360deg); }
+}
+
+.logo-text {
+  font-family: var(--font-display);
+  font-weight:800; font-size:1.2rem; letter-spacing:-0.5px;
+  background: linear-gradient(135deg, #ffffff 0%, var(--cyan) 60%, var(--violet) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+
+.logo-year {
+  font-size:0.65rem; font-weight:500; color:var(--text-muted);
+  letter-spacing:2px; text-transform:uppercase; align-self:flex-end; margin-bottom:2px;
+}
+
+.nav-buttons { display:flex; gap:0.75rem; align-items:center; }
+
+.nav-user {
+  display:flex; align-items:center; gap:8px;
+  padding:6px 14px 6px 6px;
+  background:var(--bg-surface);
+  border:1px solid var(--border-subtle);
+  border-radius:60px;
+  font-size:0.82rem; color:var(--text-secondary);
+}
+
+.nav-avatar {
+  width:28px; height:28px; border-radius:50%;
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.8rem; font-weight:700; color:#000;
+}
+
+/* ─── BUTTONS ─── */
+button {
+  font-family: var(--font-body);
+  cursor:pointer; border:none; outline:none;
+  font-weight:500; font-size:0.85rem;
+  transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+  position:relative; overflow:hidden;
+}
+
+.btn-cyber {
+  padding:8px 20px; border-radius:var(--radius-sm);
+  background: transparent;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  letter-spacing:0.5px;
+  font-family: var(--font-display);
+  font-size:0.78rem; font-weight:600;
+  text-transform:uppercase;
+  box-shadow: 0 0 0 rgba(0,245,255,0);
+}
+
+.btn-cyber:hover {
+  background: var(--cyan-dim);
+  box-shadow: 0 0 20px var(--cyan-glow), inset 0 0 20px rgba(0,245,255,0.05);
+  transform:translateY(-1px);
+}
+
+.btn-cyber::after {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(90deg, transparent, rgba(0,245,255,0.15), transparent);
+  transform:translateX(-100%);
+  transition:0.4s;
+}
+
+.btn-cyber:hover::after { transform:translateX(100%); }
+
+.btn-primary {
+  padding:10px 22px; border-radius:var(--radius-sm);
+  background: linear-gradient(135deg, var(--cyan) 0%, #00c8e0 100%);
+  color:#000; font-weight:600;
+  font-family: var(--font-display); font-size:0.8rem;
+  text-transform:uppercase; letter-spacing:0.5px;
+  box-shadow: 0 4px 16px rgba(0,245,255,0.25);
+}
+
+.btn-primary:hover {
+  transform:translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0,245,255,0.4);
+}
+
+.btn-secondary {
+  padding:10px 22px; border-radius:var(--radius-sm);
+  background: linear-gradient(135deg, var(--green), #00c896);
+  color:#000; font-weight:600;
+  font-family: var(--font-display); font-size:0.8rem;
+  text-transform:uppercase; letter-spacing:0.5px;
+  box-shadow: 0 4px 14px rgba(16,255,176,0.2);
+}
+
+.btn-secondary:hover { transform:translateY(-2px); box-shadow: 0 8px 24px rgba(16,255,176,0.35); }
+
+.btn-amber {
+  padding:9px 18px; border-radius:var(--radius-sm);
+  background: transparent; border: 1px solid var(--amber);
+  color:var(--amber); font-family:var(--font-display);
+  font-size:0.78rem; font-weight:600; text-transform:uppercase;
+}
+
+.btn-amber:hover { background:var(--amber-dim); box-shadow: 0 0 16px rgba(255,179,71,0.3); }
+
+.btn-danger {
+  padding:8px 16px; border-radius:var(--radius-sm);
+  background: transparent; border: 1px solid var(--red);
+  color:var(--red); font-family:var(--font-display);
+  font-size:0.75rem; font-weight:600; text-transform:uppercase;
+}
+
+.btn-danger:hover { background:var(--red-dim); box-shadow: 0 0 14px rgba(255,77,106,0.3); }
+
+.btn-ghost {
+  padding:8px 16px; border-radius:var(--radius-sm);
+  background:transparent; border:1px solid var(--border-subtle);
+  color:var(--text-secondary);
+}
+
+.btn-ghost:hover { border-color:var(--border-glow); color:var(--text-primary); }
+
+.btn-logout {
+  padding:8px 18px; border-radius:var(--radius-sm);
+  background:var(--red-dim); border:1px solid var(--red);
+  color:var(--red); font-family:var(--font-display);
+  font-size:0.75rem; font-weight:600; text-transform:uppercase;
+}
+
+.btn-logout:hover { background: rgba(255,77,106,0.2); }
+
+.btn-wide { width:100%; padding:13px; border-radius:var(--radius-md); font-size:0.88rem; }
+
+/* ─── CONTAINER ─── */
+.container {
+  position:relative; z-index:2;
+  max-width:1440px; margin:0 auto;
+  padding:2rem 2.5rem;
+}
+
+/* ─── SECTIONS ─── */
+.section { display:none; animation: sectionIn 0.35s cubic-bezier(0.16,1,0.3,1); }
+.section.active { display:block; }
+
+@keyframes sectionIn {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ─── AUTH ─── */
+.auth-wrapper {
+  min-height: calc(100vh - 120px);
+  display:flex; align-items:center; justify-content:center;
+  padding:2rem 0;
+}
+
+.auth-panel {
+  width:100%; max-width:480px;
+  background: var(--bg-card);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-xl);
+  padding:2.5rem;
+  box-shadow: 0 32px 64px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
+  position:relative; overflow:hidden;
+}
+
+.auth-panel::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), var(--violet), transparent);
+}
+
+.auth-panel::after {
+  content:'';
+  position:absolute; top:-100px; right:-100px;
+  width:300px; height:300px; border-radius:50%;
+  background: radial-gradient(circle, rgba(0,245,255,0.04) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+.auth-title {
+  font-family: var(--font-display);
+  font-size:1.8rem; font-weight:800; letter-spacing:-1px;
+  margin-bottom:0.4rem;
+  background: linear-gradient(135deg, #fff 0%, var(--cyan) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+
+.auth-subtitle {
+  color:var(--text-muted); font-size:0.83rem; margin-bottom:2rem;
+}
+
+/* ─── FORM ELEMENTS ─── */
+.form-group { margin-bottom:1.2rem; }
+
+.form-group label {
+  display:block; margin-bottom:0.45rem;
+  font-size:0.75rem; font-weight:600; letter-spacing:1px;
+  text-transform:uppercase; color:var(--text-secondary);
+}
+
+input, select, textarea {
+  width:100%; font-family:var(--font-body);
+  padding:0.8rem 1rem;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-sm);
+  color:var(--text-primary);
+  font-size:0.9rem;
+  transition:all 0.2s;
+}
+
+input::placeholder, textarea::placeholder { color:var(--text-muted); }
+select option { background:var(--bg-deep); }
+
+input:focus, select:focus, textarea:focus {
+  outline:none;
+  border-color:var(--cyan);
+  background:rgba(0,245,255,0.04);
+  box-shadow: 0 0 0 3px rgba(0,245,255,0.1);
+}
+
+/* ─── ALERT ─── */
+.alert-success {
+  background:rgba(16,255,176,0.08); border:1px solid rgba(16,255,176,0.3);
+  color:var(--green); border-radius:var(--radius-sm); padding:0.75rem 1rem;
+  font-size:0.85rem; margin-bottom:1rem;
+}
+
+.alert-error {
+  background:rgba(255,77,106,0.08); border:1px solid rgba(255,77,106,0.3);
+  color:var(--red); border-radius:var(--radius-sm); padding:0.75rem 1rem;
+  font-size:0.85rem; margin-bottom:1rem;
+}
+
+/* ─── SECTION HEADERS ─── */
+.section-header {
+  display:flex; justify-content:space-between; align-items:flex-end;
+  margin-bottom:2rem;
+}
+
+.section-title {
+  font-family:var(--font-display);
+  font-size:1.7rem; font-weight:800; letter-spacing:-0.5px;
+  color:var(--text-primary);
+}
+
+.section-title span { color:var(--cyan); }
+
+.section-sub { color:var(--text-muted); font-size:0.82rem; margin-top:0.25rem; }
+
+/* ─── STAT CARDS ─── */
+.dashboard-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+  gap:1.2rem; margin-bottom:2rem;
+}
+
+.stat-card {
+  background:var(--bg-card);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg);
+  padding:1.5rem;
+  position:relative; overflow:hidden;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  backdrop-filter:blur(12px);
+}
+
+.stat-card::before {
+  content:''; position:absolute;
+  top:0; left:0; right:0; bottom:0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+  pointer-events:none;
+}
+
+.stat-card:hover {
+  border-color:var(--border-glow);
+  transform:translateY(-3px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.3), 0 0 0 1px var(--border-glow);
+}
+
+.stat-icon {
+  width:40px; height:40px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.2rem; margin-bottom:1rem;
+}
+
+.stat-icon-cyan { background:var(--cyan-dim); border:1px solid rgba(0,245,255,0.2); }
+.stat-icon-violet { background:var(--violet-dim); border:1px solid rgba(167,139,250,0.2); }
+.stat-icon-amber { background:var(--amber-dim); border:1px solid rgba(255,179,71,0.2); }
+.stat-icon-green { background:var(--green-dim); border:1px solid rgba(16,255,176,0.2); }
+
+.stat-value {
+  font-family:var(--font-display);
+  font-size:2.4rem; font-weight:800; line-height:1;
+  margin-bottom:0.4rem;
+}
+
+.stat-value-cyan { color:var(--cyan); text-shadow:0 0 20px rgba(0,245,255,0.4); }
+.stat-value-violet { color:var(--violet); text-shadow:0 0 20px rgba(167,139,250,0.3); }
+.stat-value-amber { color:var(--amber); text-shadow:0 0 20px rgba(255,179,71,0.3); }
+.stat-value-green { color:var(--green); text-shadow:0 0 20px rgba(16,255,176,0.3); }
+
+.stat-label {
+  color:var(--text-muted); font-size:0.75rem; font-weight:500;
+  text-transform:uppercase; letter-spacing:1px;
+}
+
+/* ─── DATA TABLES ─── */
+.table-panel {
+  background:var(--bg-card);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg);
+  overflow:hidden; margin-bottom:1.5rem;
+  backdrop-filter:blur(12px);
+}
+
+.table-panel-header {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:1.2rem 1.5rem;
+  border-bottom:1px solid var(--border-subtle);
+  background:rgba(255,255,255,0.02);
+}
+
+.table-panel-title {
+  font-family:var(--font-display);
+  font-size:0.95rem; font-weight:700;
+  color:var(--text-primary); letter-spacing:-0.3px;
+}
+
+table { width:100%; border-collapse:collapse; }
+
+thead tr {
+  border-bottom:1px solid var(--border-subtle);
+}
+
+th {
+  padding:0.85rem 1.2rem;
+  font-size:0.7rem; font-weight:600;
+  text-transform:uppercase; letter-spacing:1.5px;
+  color:var(--text-muted);
+  text-align:left;
+  background:rgba(255,255,255,0.02);
+}
+
+td {
+  padding:0.9rem 1.2rem;
+  font-size:0.85rem; color:var(--text-secondary);
+  border-bottom:1px solid rgba(255,255,255,0.03);
+}
+
+tr:hover td { background:rgba(0,245,255,0.02); color:var(--text-primary); }
+
+tr:last-child td { border-bottom:none; }
+
+/* ─── BADGES ─── */
+.badge {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:3px 10px; border-radius:60px;
+  font-size:0.68rem; font-weight:600;
+  text-transform:uppercase; letter-spacing:0.8px;
+}
+
+.badge::before { content:''; width:5px; height:5px; border-radius:50%; }
+
+.badge-success {
+  background:rgba(16,255,176,0.1); color:var(--green);
+  border:1px solid rgba(16,255,176,0.2);
+}
+.badge-success::before { background:var(--green); box-shadow:0 0 6px var(--green); }
+
+.badge-warning {
+  background:rgba(255,179,71,0.1); color:var(--amber);
+  border:1px solid rgba(255,179,71,0.2);
+}
+.badge-warning::before { background:var(--amber); box-shadow:0 0 6px var(--amber); }
+
+.badge-danger {
+  background:var(--red-dim); color:var(--red);
+  border:1px solid rgba(255,77,106,0.2);
+}
+.badge-danger::before { background:var(--red); }
+
+.badge-cyan {
+  background:var(--cyan-dim); color:var(--cyan);
+  border:1px solid rgba(0,245,255,0.2);
+}
+.badge-cyan::before { background:var(--cyan); box-shadow:0 0 6px var(--cyan); }
+
+/* ─── PROFILE HEADER ─── */
+.profile-banner {
+  background:var(--bg-card);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-xl);
+  padding:2rem; margin-bottom:1.5rem;
+  position:relative; overflow:hidden;
+  backdrop-filter:blur(12px);
+}
+
+.profile-banner::before {
+  content:''; position:absolute;
+  top:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), var(--violet), transparent);
+}
+
+.profile-banner-bg {
+  position:absolute; top:-50%; right:-5%;
+  width:400px; height:400px; border-radius:50%;
+  background: radial-gradient(circle, rgba(0,245,255,0.04) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+.profile-avatar {
+  width:72px; height:72px; border-radius:18px;
+  background: linear-gradient(135deg, var(--cyan) 0%, var(--violet) 100%);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-size:1.8rem;
+  font-weight:800; color:#000;
+  box-shadow: 0 0 24px var(--cyan-glow);
+  flex-shrink:0;
+}
+
+.profile-name {
+  font-family:var(--font-display);
+  font-size:1.5rem; font-weight:800;
+  letter-spacing:-0.5px; color:var(--text-primary);
+}
+
+.profile-meta-row {
+  display:flex; flex-wrap:wrap; gap:1rem; margin-top:0.6rem;
+}
+
+.profile-meta-item {
+  display:flex; align-items:center; gap:5px;
+  font-size:0.8rem; color:var(--text-muted);
+}
+
+.profile-meta-item strong { color:var(--cyan); }
+
+/* ─── PROGRESS BAR ─── */
+.progress-track {
+  background:rgba(255,255,255,0.05);
+  border-radius:20px; height:6px;
+  margin-top:1.2rem; overflow:hidden;
+  border:1px solid var(--border-subtle);
+}
+
+.progress-fill {
+  height:100%; border-radius:20px;
+  background: linear-gradient(90deg, var(--cyan), var(--violet));
+  box-shadow: 0 0 10px var(--cyan-glow);
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+  position:relative;
+}
+
+.progress-fill::after {
+  content:''; position:absolute;
+  right:0; top:50%; transform:translateY(-50%);
+  width:10px; height:10px; border-radius:50%;
+  background:var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+.progress-label {
+  font-size:0.72rem; color:var(--text-muted);
+  margin-top:0.5rem; font-weight:500;
+}
+
+.progress-label span { color:var(--cyan); font-family:var(--font-display); font-weight:700; }
+
+/* ─── JOB CARDS ─── */
+.jobs-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(340px,1fr));
+  gap:1.2rem;
+}
+
+.job-card {
+  background:var(--bg-card);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg);
+  padding:1.5rem; cursor:pointer;
+  transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+  backdrop-filter:blur(12px);
+  position:relative; overflow:hidden;
+}
+
+.job-card::after {
+  content:''; position:absolute;
+  top:0; left:-100%; width:100%; height:100%;
+  background: linear-gradient(90deg, transparent, rgba(0,245,255,0.04), transparent);
+  transition:0.5s;
+}
+
+.job-card:hover::after { left:100%; }
+.job-card:hover {
+  border-color:var(--border-glow);
+  transform:translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px var(--cyan-glow);
+}
+
+.job-card-company {
+  display:flex; align-items:center; gap:10px; margin-bottom:0.8rem;
+}
+
+.job-company-badge {
+  width:36px; height:36px; border-radius:8px;
+  background: linear-gradient(135deg, var(--violet-dim), var(--cyan-dim));
+  border:1px solid var(--border-subtle);
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.75rem; font-weight:800; color:var(--cyan);
+  font-family:var(--font-display);
+}
+
+.job-company-name { color:var(--text-muted); font-size:0.8rem; }
+
+.job-title {
+  font-family:var(--font-display);
+  font-size:1rem; font-weight:700;
+  color:var(--text-primary); margin-bottom:0.8rem;
+  letter-spacing:-0.3px;
+}
+
+.skills-row { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:1rem; }
+
+.skill-tag {
+  background:var(--cyan-dim);
+  border:1px solid rgba(0,245,255,0.15);
+  color:var(--cyan);
+  padding:3px 10px; border-radius:60px;
+  font-size:0.68rem; font-weight:500;
+  letter-spacing:0.3px;
+}
+
+.skill-tag-violet {
+  background:var(--violet-dim);
+  border:1px solid rgba(167,139,250,0.15);
+  color:var(--violet);
+}
+
+.job-meta-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding-top:1rem; border-top:1px solid var(--border-subtle);
+}
+
+.job-salary {
+  font-family:var(--font-display); font-weight:700;
+  color:var(--amber); font-size:0.9rem;
+}
+
+.job-deadline { color:var(--text-muted); font-size:0.75rem; }
+
+/* ─── CARD ─── */
+.card {
+  background:var(--bg-card);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg);
+  padding:1.5rem;
+  backdrop-filter:blur(12px);
+  transition:all 0.25s;
+  position:relative; overflow:hidden;
+}
+
+.card:hover {
+  border-color:var(--border-glow);
+  box-shadow:0 12px 32px rgba(0,0,0,0.3);
+}
+
+/* ─── MATCH SCORE ─── */
+.match-score {
+  font-family:var(--font-display);
+  font-weight:700; color:var(--cyan);
+  font-size:0.9rem;
+}
+
+/* ─── MODALS ─── */
+.modal {
+  display:none; position:fixed; inset:0; z-index:3000;
+  align-items:center; justify-content:center;
+  padding:1rem;
+}
+
+.modal-backdrop {
+  position:absolute; inset:0;
+  background:rgba(0,0,0,0.75);
+  backdrop-filter:blur(12px);
+}
+
+.modal.active { display:flex; }
+
+.modal-box {
+  position:relative; z-index:1;
+  background:var(--bg-surface);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-xl);
+  width:100%; max-width:580px;
+  max-height:88vh; overflow-y:auto;
+  padding:2rem;
+  box-shadow:0 40px 80px rgba(0,0,0,0.6);
+  animation: modalIn 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+
+.modal-box::before {
+  content:''; position:absolute;
+  top:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg, transparent, var(--violet), var(--cyan), transparent);
+}
+
+@keyframes modalIn {
+  from { opacity:0; transform:scale(0.94) translateY(10px); }
+  to   { opacity:1; transform:scale(1) translateY(0); }
+}
+
+.modal-header {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:1.5rem;
+}
+
+.modal-title {
+  font-family:var(--font-display);
+  font-size:1.3rem; font-weight:800; letter-spacing:-0.5px;
+  color:var(--text-primary);
+}
+
+.modal-close {
+  width:30px; height:30px; border-radius:var(--radius-sm);
+  background:rgba(255,255,255,0.05); border:1px solid var(--border-subtle);
+  color:var(--text-muted); font-size:1rem;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all 0.2s;
+}
+
+.modal-close:hover { background:var(--red-dim); color:var(--red); border-color:var(--red); }
+
+/* ─── UPLOAD AREA ─── */
+.upload-zone {
+  border:2px dashed rgba(0,245,255,0.2);
+  border-radius:var(--radius-lg);
+  padding:2.5rem; text-align:center;
+  background:var(--cyan-dim);
+  transition:all 0.25s;
+  cursor:pointer;
+}
+
+.upload-zone:hover {
+  border-color:var(--cyan);
+  background:rgba(0,245,255,0.06);
+  box-shadow:0 0 30px var(--cyan-glow);
+}
+
+.upload-icon { font-size:2.5rem; margin-bottom:0.8rem; }
+
+.upload-text { color:var(--text-secondary); font-size:0.88rem; margin-bottom:1rem; }
+
+/* ─── JOB DETAIL ─── */
+.job-detail-card {
+  background:var(--bg-card);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-xl);
+  padding:2.5rem; backdrop-filter:blur(12px);
+  position:relative; overflow:hidden;
+}
+
+.job-detail-card::before {
+  content:''; position:absolute;
+  top:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg, transparent, var(--amber), var(--cyan), transparent);
+}
+
+/* ─── SEARCH FILTER BAR ─── */
+.filter-bar {
+  display:flex; gap:1rem; flex-wrap:wrap;
+  background:var(--bg-card); border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg); padding:1.2rem;
+  margin-bottom:1.5rem; backdrop-filter:blur(12px);
+}
+
+.filter-bar input {
+  flex:1; min-width:140px;
+}
+
+/* ─── AUTH LINK ─── */
+.auth-link {
+  color:var(--cyan); cursor:pointer; font-weight:500;
+  transition:opacity 0.2s;
+}
+
+.auth-link:hover { opacity:0.75; }
+
+.auth-divider {
+  text-align:center; margin:1.2rem 0;
+  color:var(--text-muted); font-size:0.82rem; position:relative;
+}
+
+.auth-divider::before {
+  content:''; position:absolute;
+  left:0; right:0; top:50%;
+  border-top:1px solid var(--border-subtle);
+}
+
+.auth-divider span {
+  position:relative; background:var(--bg-surface);
+  padding:0 0.8rem; z-index:1;
+}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px) {
+  .navbar { padding:0 1rem; }
+  .container { padding:1.2rem 1rem; }
+  .logo-year { display:none; }
+  .dashboard-grid { grid-template-columns:repeat(2,1fr); }
+  .jobs-grid { grid-template-columns:1fr; }
+  .section-header { flex-direction:column; align-items:flex-start; gap:0.8rem; }
+  .filter-bar { flex-direction:column; }
+  .profile-banner > div:first-child { flex-direction:column; }
+}
+
+@media(max-width:480px) {
+  .dashboard-grid { grid-template-columns:1fr; }
+  table { font-size:0.78rem; }
+  th, td { padding:0.7rem 0.8rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ NAVBAR ═══════════════ -->
+<nav class="navbar">
+  <div class="nav-logo">
+    <div class="logo-mark">N</div>
+    <div>
+      <div class="logo-text">NexusPlace</div>
+    </div>
+    <div class="logo-year">2026</div>
+  </div>
+  <div class="nav-buttons" id="navButtons"></div>
+</nav>
+
+<div class="container">
+
+  <!-- ═══ LOGIN ═══ -->
+  <div id="auth-login" class="section active">
+    <div class="auth-wrapper">
+      <div class="auth-panel">
+        <div class="auth-title">Welcome Back</div>
+        <div class="auth-subtitle">Sign in to your intelligent placement portal</div>
+        <div id="loginAlert"></div>
+        <form onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label>Portal Role</label>
+            <select id="loginRole">
+              <option value="student">Student</option>
+              <option value="admin">Admin</option>
+              <option value="recruiter">Recruiter</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="loginEmail" placeholder="you@example.com">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn-primary btn-wide" style="margin-top:0.5rem;">
+            Access Portal →
+          </button>
+        </form>
+        <div class="auth-divider"><span>New to NexusPlace?</span></div>
+        <div style="text-align:center; font-size:0.85rem; color:var(--text-muted);">
+          <span class="auth-link" onclick="showSection('auth-register')">Create your account →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ REGISTER ═══ -->
+  <div id="auth-register" class="section">
+    <div class="auth-wrapper">
+      <div class="auth-panel">
+        <div class="auth-title">Create Account</div>
+        <div class="auth-subtitle">Join the intelligent placement network</div>
+        <div id="registerAlert"></div>
+        <form onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label>I am a</label>
+            <select id="registerRole">
+              <option value="student">Student</option>
+              <option value="admin">Admin</option>
+              <option value="recruiter">Recruiter</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Full Name</label>
+            <input id="registerName" placeholder="Aarav Sharma" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="registerEmail" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="registerPassword" placeholder="Min. 6 characters" required>
+          </div>
+          <div id="studentFields" style="display:none;">
+            <div style="height:1px; background:var(--border-subtle); margin:1rem 0;"></div>
+            <div class="form-group">
+              <label>Roll Number</label>
+              <input id="rollNumber" placeholder="CS2026001">
+            </div>
+            <div class="form-group">
+              <label>Department</label>
+              <select id="department">
+                <option>CSE</option><option>ECE</option><option>MECH</option><option>CIVIL</option><option>IT</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>CGPA</label>
+              <input type="number" id="cgpa" step="0.01" min="0" max="10" placeholder="8.5">
+            </div>
+          </div>
+          <button type="submit" class="btn-primary btn-wide" style="margin-top:0.5rem;">
+            Create Account
+          </button>
+        </form>
+        <div class="auth-divider"><span>Already registered?</span></div>
+        <div style="text-align:center; font-size:0.85rem; color:var(--text-muted);">
+          <span class="auth-link" onclick="showSection('auth-login')">← Back to login</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ STUDENT DASHBOARD ═══ -->
+  <div id="student-dashboard" class="section">
+    <!-- Profile Banner -->
+    <div class="profile-banner">
+      <div class="profile-banner-bg"></div>
+      <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start; position:relative;">
+        <div class="profile-avatar" id="profileAvatar">—</div>
+        <div style="flex:1; min-width:200px;">
+          <div class="profile-name" id="studentName"></div>
+          <div class="profile-meta-row">
+            <div class="profile-meta-item">✉ <span id="studentEmail"></span></div>
+            <div class="profile-meta-item">🎓 <strong id="studentRoll"></strong></div>
+            <div class="profile-meta-item">📚 <strong id="studentDept"></strong></div>
+            <div class="profile-meta-item">⭐ CGPA <strong id="studentCGPA"></strong></div>
+          </div>
+          <div style="margin-top:1rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+            <button class="btn-cyber" onclick="openModal('editProfileModal')">✎ Edit Profile</button>
+            <button class="btn-ghost" onclick="openModal('uploadResumeModal')">📎 Resume</button>
+            <button class="btn-secondary" onclick="window.location.href='job-matching.html'">🤖 Smart Matching →</button>
+            <button class="btn-secondary" onclick="loadJobsList()">Explore Jobs →</button>
+          </div>
+        </div>
+        <div style="text-align:right; min-width:120px;">
+          <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-bottom:0.3rem;">Profile Strength</div>
+          <div style="font-family:var(--font-display); font-size:2rem; font-weight:800; color:var(--cyan);" id="completionPercent">0%</div>
+        </div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="completionFill" style="width:0%"></div>
+      </div>
+      <div class="progress-label" id="profileCompletionText">
+        Complete your profile for better AI matches
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="dashboard-grid">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-cyan">📄</div>
+        <div class="stat-value stat-value-cyan" id="resumeStatusStat">—</div>
+        <div class="stat-label">Resume Status</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-violet">📬</div>
+        <div class="stat-value stat-value-violet" id="appliedCount">0</div>
+        <div class="stat-label">Applications Sent</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-amber">🎯</div>
+        <div class="stat-value stat-value-amber" id="recommendedCount">0</div>
+        <div class="stat-label">AI Matches Found</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-green">✅</div>
+        <div class="stat-value stat-value-green" id="shortlistedCount">0</div>
+        <div class="stat-label">Shortlisted</div>
+      </div>
+    </div>
+
+    <!-- Recommended Jobs Table -->
+    <div class="table-panel">
+      <div class="table-panel-header">
+        <div class="table-panel-title">⚡ AI-Powered Recommendations</div>
+        <button class="btn-cyber" onclick="loadJobsList()">View All</button>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Company</th><th>Role</th><th>Match Score</th><th>Salary</th><th>Action</th>
+        </tr></thead>
+        <tbody id="recommendedJobsBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Applications Table -->
+    <div class="table-panel">
+      <div class="table-panel-header">
+        <div class="table-panel-title">📋 My Applications</div>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Company</th><th>Position</th><th>Applied</th><th>Status</th>
+        </tr></thead>
+        <tbody id="applicationsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ ADMIN DASHBOARD ═══ -->
+  <div id="admin-dashboard" class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Admin <span>Control</span></div>
+        <div class="section-sub">Manage placements, students, and job listings</div>
+      </div>
+      <button class="btn-primary" onclick="openModal('postJobModal')">+ Post Job</button>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-cyan">🎓</div>
+        <div class="stat-value stat-value-cyan" id="totalStudents">0</div>
+        <div class="stat-label">Registered Students</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-violet">💼</div>
+        <div class="stat-value stat-value-violet" id="totalJobs">0</div>
+        <div class="stat-label">Active Job Listings</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-amber">📬</div>
+        <div class="stat-value stat-value-amber" id="totalApplications">0</div>
+        <div class="stat-label">Total Applications</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-green">🏆</div>
+        <div class="stat-value stat-value-green" id="totalSelected">0</div>
+        <div class="stat-label">Offers Extended</div>
+      </div>
+    </div>
+
+    <div class="table-panel">
+      <div class="table-panel-header">
+        <div class="table-panel-title">📌 Job Listings</div>
+        <button class="btn-cyber" onclick="openModal('postJobModal')">+ Post New</button>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Company</th><th>Position</th><th>Skills Required</th><th>Apps</th><th>Deadline</th><th>Action</th>
+        </tr></thead>
+        <tbody id="jobsTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="table-panel">
+      <div class="table-panel-header">
+        <div class="table-panel-title">🎓 Student Directory</div>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Name</th><th>Email</th><th>Dept</th><th>CGPA</th><th>Resume</th><th>Action</th>
+        </tr></thead>
+        <tbody id="studentsTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ RECRUITER DASHBOARD ═══ -->
+  <div id="recruiter-dashboard" class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Recruiter <span>Cockpit</span></div>
+        <div class="section-sub">Manage your job postings and review candidates</div>
+      </div>
+      <button class="btn-primary" onclick="openModal('postJobModal')">+ Post Job</button>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-cyan">📢</div>
+        <div class="stat-value stat-value-cyan" id="recruiterJobCount">0</div>
+        <div class="stat-label">Active Postings</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-amber">📥</div>
+        <div class="stat-value stat-value-amber" id="recruiterAppCount">0</div>
+        <div class="stat-label">Applications Received</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-green">⭐</div>
+        <div class="stat-value stat-value-green" id="recruiterShortlist">0</div>
+        <div class="stat-label">Shortlisted</div>
+      </div>
+    </div>
+
+    <div class="table-panel">
+      <div class="table-panel-header">
+        <div class="table-panel-title">📥 Incoming Applications</div>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Candidate</th><th>Position</th><th>Applied</th><th>Status</th><th>Actions</th>
+        </tr></thead>
+        <tbody id="recruiterApplicationsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ JOB LISTING ═══ -->
+  <div id="jobs-list" class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Explore <span>Opportunities</span></div>
+        <div class="section-sub">Browse and apply to curated placements</div>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <input type="text" id="jobSearchInput" placeholder="🔍  Search by company or role...">
+      <input type="text" id="jobSkillsFilter" placeholder="⚙  Filter by skill...">
+      <input type="number" id="jobCGPAFilter" placeholder="Min CGPA" step="0.1" style="max-width:140px;">
+    </div>
+
+    <div class="jobs-grid" id="jobsListContainer"></div>
+  </div>
+
+  <!-- ═══ JOB DETAIL ═══ -->
+  <div id="job-detail" class="section">
+    <button class="btn-ghost" onclick="goBackToJobs()" style="margin-bottom:1.5rem; display:inline-flex; align-items:center; gap:6px;">
+      ← Back to Listings
+    </button>
+    <div id="jobDetailContainer"></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════ MODALS ═══════════════ -->
+
+<!-- Edit Profile -->
+<div id="editProfileModal" class="modal">
+  <div class="modal-backdrop" onclick="closeModal('editProfileModal')"></div>
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">Update Profile</div>
+      <div class="modal-close" onclick="closeModal('editProfileModal')">✕</div>
+    </div>
+    <form onsubmit="handleUpdateProfile(event)">
+      <div class="form-group">
+        <label>Skills (comma-separated)</label>
+        <input id="skillsInput" placeholder="React, Python, Machine Learning, SQL...">
+      </div>
+      <div class="form-group">
+        <label>Bio / About</label>
+        <textarea id="aboutInput" rows="4" placeholder="Tell recruiters about yourself, your projects, and goals..."></textarea>
+      </div>
+      <button type="submit" class="btn-primary btn-wide" style="margin-top:0.5rem;">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<!-- Upload Resume -->
+<div id="uploadResumeModal" class="modal">
+  <div class="modal-backdrop" onclick="closeModal('uploadResumeModal')"></div>
+  <div class="modal-box" style="max-width:600px;">
+    <div class="modal-header">
+      <div class="modal-title">✨ Smart Resume Parser</div>
+      <div class="modal-close" onclick="closeModal('uploadResumeModal')">✕</div>
+    </div>
+    
+    <!-- Upload Section -->
+    <div id="resumeUploadSection">
+      <div class="upload-zone" id="uploadArea" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" onclick="document.getElementById('resumeFile').click()">
+        <div class="upload-icon">📄</div>
+        <div class="upload-text">Drag & drop your PDF here or click to browse</div>
+        <button type="button" class="btn-cyber" onclick="event.stopPropagation(); document.getElementById('resumeFile').click()">Choose PDF File</button>
+        <input type="file" id="resumeFile" accept=".pdf" style="display:none;" onchange="handleResumeFileSelect(event)">
+      </div>
+      <div id="resumeUploadStatus" style="margin-top:1rem; display:none;"></div>
+    </div>
+
+    <!-- Parsing Results Section (Hidden by default) -->
+    <div id="resumeParsingSection" style="display:none;">
+      <div style="margin-top:1.5rem;">
+        <!-- Skills Tab -->
+        <div style="margin-bottom:1.5rem;">
+          <div style="font-weight:600; color:var(--cyan); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem;">
+            💼 Extracted Skills (<span id="skillsCount">0</span>)
+          </div>
+          <div id="extractedSkillsList" style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+          </div>
+        </div>
+
+        <!-- Education Tab -->
+        <div style="margin-bottom:1.5rem;">
+          <div style="font-weight:600; color:var(--cyan); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem;">
+            🎓 Education (<span id="educationCount">0</span>)
+          </div>
+          <div id="extractedEducationList" style="font-size:0.85rem;">
+          </div>
+        </div>
+
+        <!-- Experience Tab -->
+        <div style="margin-bottom:1.5rem;">
+          <div style="font-weight:600; color:var(--cyan); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem;">
+            🏢 Experience (<span id="experienceCount">0</span>)
+          </div>
+          <div id="extractedExperienceList" style="font-size:0.85rem;">
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-top:1.5rem;">
+        <button type="button" class="btn-secondary" onclick="clearResumeData()">← Back</button>
+        <button type="button" class="btn-primary" onclick="confirmResumeUpdate()">✓ Update Profile</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Post Job -->
+<div id="postJobModal" class="modal">
+  <div class="modal-backdrop" onclick="closeModal('postJobModal')"></div>
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">Post New Job</div>
+      <div class="modal-close" onclick="closeModal('postJobModal')">✕</div>
+    </div>
+    <form onsubmit="handlePostJob(event)">
+      <div class="form-group"><label>Company Name</label><input placeholder="e.g. Futurix AI" id="companyName" required></div>
+      <div class="form-group"><label>Job Title</label><input placeholder="e.g. Senior ML Engineer" id="jobTitle" required></div>
+      <div class="form-group"><label>Description</label><textarea placeholder="Role responsibilities and requirements..." id="jobDescription" rows="3"></textarea></div>
+      <div class="form-group"><label>Required Skills (comma-separated)</label><input placeholder="Python, TensorFlow, SQL" id="requiredSkills" required></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div class="form-group"><label>Min CGPA</label><input type="number" step="0.01" placeholder="7.0" id="minCGPA" required></div>
+        <div class="form-group"><label>Salary (LPA)</label><input type="number" step="0.5" placeholder="24" id="salary" required></div>
+      </div>
+      <div class="form-group"><label>Application Deadline</label><input type="date" id="deadline" required></div>
+      <button type="submit" class="btn-primary btn-wide" style="margin-top:0.5rem;">Publish Listing</button>
+    </form>
+  </div>
+</div>
+
+<!-- Apply Modal -->
+<div id="applicationModal" class="modal">
+  <div class="modal-backdrop" onclick="closeModal('applicationModal')"></div>
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">Submit Application</div>
+      <div class="modal-close" onclick="closeModal('applicationModal')">✕</div>
+    </div>
+    <div id="appJobTitle" style="color:var(--cyan); font-family:var(--font-display); font-weight:700; margin-bottom:1.2rem; font-size:0.95rem;"></div>
+    <form onsubmit="submitJobApplication(event)">
+      <div class="form-group">
+        <label>Cover Letter</label>
+        <textarea id="coverLetterInput" rows="5" placeholder="Explain why you're an exceptional fit for this role..."></textarea>
+      </div>
+      <button type="submit" class="btn-primary btn-wide" style="margin-top:0.5rem;">Confirm Application →</button>
+    </form>
+  </div>
+</div>
+
+<script src="apiService.js"></script>
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script src="socketClient.js"></script>
+<script>
+// ═══════════════ DATA STORE ═══════════════
+// NOTE: In-memory data replaced with API calls via apiService.js
+let systemData = {
+  users: [],
+  students: [],
+  jobs: [],
+  applications: [],
+  currentUser: null,
+  notifications: []
+};
+
+// Load initial data from API
+// ═══════════════ SOCKET.IO NOTIFICATION HANDLER ═══════════════
+
+/**
+ * Handle real-time socket notifications
+ */
+function handleSocketNotification(notification) {
+  const { event, data, timestamp } = notification;
+  
+  console.log('[Notification]', event, data);
+  
+  // Store notification
+  systemData.notifications.push({
+    id: Date.now(),
+    event,
+    data,
+    timestamp,
+    read: false
+  });
+
+  // Limit to 50 recent notifications
+  if (systemData.notifications.length > 50) {
+    systemData.notifications.shift();
+  }
+
+  // Show visual notification based on event type
+  if (event === 'application:new') {
+    showToast(
+      `📨 New Application: ${data.studentName} applied for ${data.jobTitle} at ${data.companyName}`,
+      'info'
+    );
+    // Refresh admin dashboard if visible
+    if (document.getElementById('admin-dashboard').classList.contains('active')) {
+      loadAdminApplications();
+    }
+  } 
+  else if (event === 'application:statusUpdate') {
+    showToast(
+      `${data.icon || '📝'} Application status updated: ${data.studentName} - ${data.newStatus}`,
+      'info'
+    );
+    // Refresh if admin dashboard visible
+    if (document.getElementById('admin-dashboard').classList.contains('active')) {
+      loadAdminApplications();
+    }
+  } 
+  else if (event === 'application:statusChanged') {
+    showToast(
+      `${data.icon} ${data.message}: ${data.companyName} - ${data.jobTitle}`,
+      'success'
+    );
+    // Refresh student applications if visible
+    if (document.getElementById('student-dashboard').classList.contains('active')) {
+      loadStudentDashboard();
+    }
+  }
+  else if (event === 'interview:scheduled') {
+    showToast(
+      `${data.icon} Interview scheduled: ${new Date(data.interviewDate).toLocaleDateString()} at ${data.interviewTime}`,
+      'success'
+    );
+  }
+  else if (event === 'interview:result') {
+    showToast(
+      `${data.icon} Interview result: ${data.message}`,
+      data.result === 'pass' ? 'success' : 'warning'
+    );
+  }
+  else if (event === 'dashboard:update') {
+    // General dashboard update
+    console.log('[Dashboard Update]', data);
+  }
+}
+
+/**
+ * Show toast notification
+ */
+function showToast(message, type = 'info') {
+  // Create toast element
+  const toast = document.createElement('div');
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: ${type === 'success' ? '#10ffb0' : type === 'error' ? '#ff4d6a' : '#00f5ff'};
+    color: #000;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    z-index: 10000;
+    animation: toastSlideIn 0.3s ease;
+    max-width: 400px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  `;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  // Auto-remove after 5 seconds
+  setTimeout(() => {
+    toast.style.animation = 'toastSlideOut 0.3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 5000);
+}
+
+// Add toast animations to style
+if (!document.getElementById('toastStyles')) {
+  const style = document.createElement('style');
+  style.id = 'toastStyles';
+  style.textContent = `
+    @keyframes toastSlideIn {
+      from { transform: translateX(450px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes toastSlideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(450px); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// ═══════════════════════════════════════════════════════════
+
+async function initializeApp() {
+  try {
+    // Load jobs
+    const jobsRes = await apiService.getAllJobs();
+    if (jobsRes.success) {
+      systemData.jobs = jobsRes.jobs || [];
+    }
+    
+    // Load current user if token exists
+    if (apiService.isAuthenticated()) {
+      const profileRes = await apiService.getMyProfile();
+      if (profileRes.success) {
+        systemData.currentUser = profileRes.student;
+        updateNavbar();
+        loadStudentDashboard();
+        showSection('student-dashboard');
+      }
+    } else {
+      updateNavbar();
+    }
+  } catch (error) {
+    console.error('Error initializing app:', error);
+  }
+}
+
+// ═══════════════ NAVIGATION ═══════════════
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById(id);
+  if(el) el.classList.add('active');
+}
+
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+function updateNavbar() {
+  const nav = document.getElementById('navButtons');
+  const currentUser = apiService.currentUser;
+  if(currentUser) {
+    nav.innerHTML = `
+      <div class="nav-user">
+        <div class="nav-avatar">${currentUser.name.charAt(0).toUpperCase()}</div>
+        <span style="font-size:0.8rem;">${currentUser.name.split(' ')[0]}</span>
+        <span class="badge badge-cyan" style="margin-left:4px;">${currentUser.role || 'student'}</span>
+      </div>
+      <button class="btn-logout" onclick="handleLogout()">Logout</button>`;
+  } else {
+    nav.innerHTML = `
+      <button class="btn-cyber" onclick="showSection('auth-login')">Login</button>
+      <button class="btn-primary" onclick="showSection('auth-register')">Register</button>`;
+  }
+}
+
+// ═══════════════ AUTH ═══════════════
+async function handleRegister(e) {
+  e.preventDefault();
+  const role = document.getElementById('registerRole').value;
+  const name = document.getElementById('registerName').value;
+  const email = document.getElementById('registerEmail').value;
+  const pwd = document.getElementById('registerPassword').value;
+  
+  // Show loading state
+  document.querySelector('#auth-register button[type="submit"]').disabled = true;
+  
+  if (role === 'student') {
+    const rollNumber = document.getElementById('rollNumber').value;
+    const department = document.getElementById('department').value;
+    const cgpa = document.getElementById('cgpa').value;
+    
+    const result = await apiService.register(name, email, pwd, rollNumber, department, cgpa);
+    
+    if (result.success) {
+      showAlert('registerAlert', '✓ Account created successfully! Redirecting...', 'success');
+      systemData.currentUser = result.student;
+      setTimeout(() => {
+        showSection('auth-login');
+        document.querySelector('#auth-register button[type="submit"]').disabled = false;
+      }, 1400);
+    } else {
+      showAlert('registerAlert', '⚠ ' + (result.message || 'Registration failed'), 'error');
+      document.querySelector('#auth-register button[type="submit"]').disabled = false;
+    }
+  }
+}
+
+async function handleLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value;
+  const pwd = document.getElementById('loginPassword').value;
+  
+  // Show loading state
+  document.querySelector('#auth-login button[type="submit"]').disabled = true;
+  
+  const result = await apiService.login(email, pwd);
+  
+  if (result.success) {
+    systemData.currentUser = result.student;
+    updateNavbar();
+
+    // Initialize Socket.io connection for real-time updates
+    try {
+      await socketClient.connect();
+      const role = document.getElementById('loginRole').value;
+      socketClient.joinUser(result.student.id, role, email);
+      
+      // Subscribe to notifications
+      socketClient.onNotification((notification) => {
+        handleSocketNotification(notification);
+      });
+
+      // Subscribe admins to dashboard updates
+      if (role === 'admin') {
+        socketClient.subscribeToDashboard(role, result.student.id);
+      }
+
+      console.log('[App] Socket.io initialized for user:', email);
+    } catch (socketError) {
+      console.error('[App] Socket.io connection failed:', socketError);
+      // Continue anyway - real-time features will be unavailable
+    }
+
+    loadStudentDashboard();
+    showSection('student-dashboard');
+  } else {
+    showAlert('loginAlert', '✗ ' + (result.message || 'Invalid credentials'), 'error');
+    document.querySelector('#auth-login button[type="submit"]').disabled = false;
+  }
+}
+
+async function handleLogout() {
+  await apiService.logout();
+  systemData.currentUser = null;
+  
+  // Disconnect Socket.io
+  socketClient.disconnect();
+  
+  updateNavbar();
+  showSection('auth-login');
+}
+
+// ═══════════════ STUDENT ═══════════════
+async function loadStudentDashboard() {
+  if (!apiService.currentUser || apiService.currentUser.role !== 'student') {
+    return;
+  }
+  
+  const student = apiService.currentUser;
+  document.getElementById('studentName').innerText = student.name;
+  document.getElementById('studentEmail').innerText = student.email;
+  document.getElementById('studentRoll').innerText = student.rollNumber || 'N/A';
+  document.getElementById('studentDept').innerText = student.department;
+  document.getElementById('studentCGPA').innerText = student.cgpa;
+  document.getElementById('profileAvatar').innerText = student.name.charAt(0).toUpperCase();
+  document.getElementById('resumeStatusStat').innerText = student.resumePath ? 'Ready' : 'Missing';
+
+  const completion = (student.resumePath ? 40 : 0) + ((student.skills?.length || 0) > 0 ? 35 : 0) + (student.about ? 25 : 0);
+  document.getElementById('completionFill').style.width = completion + '%';
+  document.getElementById('completionPercent').innerText = completion + '%';
+  document.getElementById('profileCompletionText').innerHTML = completion < 100
+    ? `Profile is <span>${completion}%</span> complete — add ${!student.resumePath?'resume, ':''}${!student.skills?.length?'skills, ':''}${!student.about?'bio':''}to boost AI matches`
+    : `Profile is <span>100%</span> complete — you're ready to get placed!`;
+
+  // Load recommended jobs
+  const matchRes = await apiService.getRecommendedJobs(student._id);
+  if (matchRes.success) {
+    loadRecommendedJobsFromAPI(matchRes.jobs || []);
+  }
+  
+  // Load applications
+  const appRes = await apiService.getMyApplications();
+  if (appRes.success) {
+    loadApplicationsFromAPI(appRes.applications || []);
+    document.getElementById('appliedCount').innerText = (appRes.applications || []).length;
+    document.getElementById('shortlistedCount').innerText = (appRes.applications || []).filter(a => a.status === 'shortlisted').length;
+  }
+}
+
+function loadRecommendedJobsFromAPI(jobs) {
+  const tbody = document.getElementById('recommendedJobsBody');
+  if(!jobs.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">Complete your profile to unlock AI-powered job matches</td></tr>';
+    return;
+  }
+  tbody.innerHTML = jobs.map(job => {
+    const ms = job.matchScore || 0;
+    const scoreColor = ms >= 70 ? 'var(--green)' : ms >= 45 ? 'var(--amber)' : 'var(--text-muted)';
+    return `<tr>
+      <td><strong style="color:var(--text-primary);">${job.company}</strong></td>
+      <td>${job.title}</td>
+      <td><span style="font-family:var(--font-display); font-weight:700; color:${scoreColor}; font-size:0.95rem;">${ms}%</span></td>
+      <td><span style="color:var(--amber); font-weight:600;">₹${job.salary} LPA</span></td>
+      <td><button class="btn-cyber" style="padding:5px 14px; font-size:0.7rem;" onclick="openJobApplicationForm('${job._id}')">Apply</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function loadApplicationsFromAPI(apps) {
+  const tbody = document.getElementById('applicationsBody');
+  if(!apps.length) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:2rem;">No applications submitted yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = apps.map(app => {
+    const statusMap = { applied:'badge-warning', shortlisted:'badge-success', rejected:'badge-danger', selected:'badge-success' };
+    const appliedDate = new Date(app.appliedAt).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'});
+    return `<tr>
+      <td><strong style="color:var(--text-primary);">${app.jobId?.company || 'Unknown'}</strong></td>
+      <td>${app.jobId?.title || 'Unknown'}</td>
+      <td style="color:var(--text-muted);">${appliedDate}</td>
+      <td><span class="badge ${statusMap[app.status]||'badge-warning'}">${app.status}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══════════════ PROFILE ═══════════════
+async function handleUpdateProfile(e) {
+  e.preventDefault();
+  const skills = document.getElementById('skillsInput').value.split(',').map(x=>x.trim()).filter(Boolean);
+  const about = document.getElementById('aboutInput').value;
+  
+  const result = await apiService.updateProfile({
+    skills,
+    about
+  });
+  
+  if (result.success) {
+    closeModal('editProfileModal');
+    loadStudentDashboard();
+    showToast('Profile updated');
+  } else {
+    showAlert('profileAlert', '⚠ ' + (result.message || 'Failed to update profile'), 'error');
+  }
+}
+
+// ═══════════════ RESUME ═══════════════
+// Store parsed resume data temporarily
+let parsedResumeData = null;
+
+async function handleResumeFileSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  if (file.type !== 'application/pdf') {
+    showAlert('error', '⚠ Only PDF files are supported. Please upload a PDF resume.', 'error');
+    return;
+  }
+
+  // Show loading state
+  const uploadStatus = document.getElementById('resumeUploadStatus');
+  uploadStatus.style.display = 'block';
+  uploadStatus.innerHTML = '<div style="color:var(--cyan); text-align:center; padding:1rem;">⏳ Parsing resume... This may take a moment...</div>';
+
+  try {
+    // Parse the resume
+    const parseResult = await apiService.parseResume(file);
+    
+    if (parseResult.success) {
+      // Store parsed data
+      parsedResumeData = parseResult.data;
+
+      // Hide upload section, show parsing results
+      document.getElementById('resumeUploadSection').style.display = 'none';
+      document.getElementById('resumeParsingSection').style.display = 'block';
+
+      // Display skills
+      displayParsedSkills(parseResult.data.skills);
+      
+      // Display education
+      displayParsedEducation(parseResult.data.education);
+      
+      // Display experience
+      displayParsedExperience(parseResult.data.experience);
+
+      uploadStatus.style.display = 'none';
+    } else {
+      uploadStatus.innerHTML = `<div class="alert-error">⚠ ${parseResult.message || 'Failed to parse resume'}</div>`;
+    }
+  } catch (error) {
+    console.error('Resume parsing error:', error);
+    uploadStatus.innerHTML = '<div class="alert-error">⚠ Error parsing resume. Please try again.</div>';
+  }
+}
+
+function displayParsedSkills(skills) {
+  const container = document.getElementById('extractedSkillsList');
+  document.getElementById('skillsCount').textContent = skills.length;
+  
+  if (skills.length === 0) {
+    container.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">No skills detected</div>';
+    return;
+  }
+
+  container.innerHTML = skills.map(skill => 
+    `<span style="background:var(--cyan-dim); border:1px solid var(--border-glow); padding:0.3rem 0.7rem; border-radius:var(--radius-sm); font-size:0.8rem; color:var(--cyan);">${skill}</span>`
+  ).join('');
+}
+
+function displayParsedEducation(education) {
+  const container = document.getElementById('extractedEducationList');
+  document.getElementById('educationCount').textContent = education.length;
+  
+  if (education.length === 0) {
+    container.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">No education details found</div>';
+    return;
+  }
+
+  container.innerHTML = education.map(edu => `
+    <div style="margin-bottom:0.75rem; padding:0.75rem; background:var(--bg-card); border-left:3px solid var(--cyan);">
+      <div style="font-weight:600; color:var(--cyan);">${edu.degree}</div>
+      <div style="color:var(--text-secondary); font-size:0.85rem;">${edu.field}</div>
+      ${edu.gpa ? `<div style="color:var(--text-muted); font-size:0.8rem;">GPA: ${edu.gpa}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function displayParsedExperience(experience) {
+  const container = document.getElementById('extractedExperienceList');
+  document.getElementById('experienceCount').textContent = experience.length;
+  
+  if (experience.length === 0) {
+    container.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem;">No experience details found</div>';
+    return;
+  }
+
+  container.innerHTML = experience.map(exp => `
+    <div style="margin-bottom:0.75rem; padding:0.75rem; background:var(--bg-card); border-left:3px solid var(--amber);">
+      <div style="font-weight:600; color:var(--amber);">${exp.title} @ ${exp.company}</div>
+      <div style="color:var(--text-secondary); font-size:0.85rem;">${exp.duration}</div>
+    </div>
+  `).join('');
+}
+
+function clearResumeData() {
+  // Reset to upload section
+  parsedResumeData = null;
+  document.getElementById('resumeUploadSection').style.display = 'block';
+  document.getElementById('resumeParsingSection').style.display = 'none';
+  document.getElementById('resumeFile').value = ''; // Reset file input
+}
+
+async function confirmResumeUpdate() {
+  if (!parsedResumeData) {
+    showAlert('error', '⚠ No parsed resume data available', 'error');
+    return;
+  }
+
+  const confirmBtn = event.target;
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = '⏳ Updating...';
+
+  try {
+    // Get the file again
+    const file = document.getElementById('resumeFile').files[0];
+    const result = await apiService.parseResumeAndUpdate(file);
+
+    if (result.success) {
+      // Update local user data
+      apiService.currentUser = { ...apiService.currentUser, ...result.data };
+      localStorage.setItem('user', JSON.stringify(apiService.currentUser));
+
+      showAlert('success', `✓ Profile updated! Added ${result.newSkillsAdded} new skills.`, 'success');
+      
+      setTimeout(() => {
+        closeModal('uploadResumeModal');
+        loadStudentDashboard();
+        clearResumeData();
+      }, 1500);
+    } else {
+      showAlert('error', '⚠ ' + (result.message || 'Failed to update profile'), 'error');
+    }
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    showAlert('error', '⚠ Error updating profile. Please try again.', 'error');
+  } finally {
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = '✓ Update Profile';
+  }
+}
+
+async function handleFileSelect(e) {
+  const file = e.target.files[0];
+  if(file) {
+    const result = await apiService.uploadResume(file);
+    if (result.success) {
+      apiService.currentUser = result.student;
+      localStorage.setItem('user', JSON.stringify(result.student));
+      document.getElementById('resumePreview').innerHTML =
+        `<div class="alert-success"><strong>✓ Uploaded:</strong> ${file.name} (${(file.size/1024).toFixed(1)} KB)</div>`;
+      setTimeout(() => { 
+        closeModal('uploadResumeModal'); 
+        loadStudentDashboard(); 
+      }, 1000);
+    } else {
+      showAlert('resumeAlert', '⚠ ' + (result.message || 'Upload failed'), 'error');
+    }
+  }
+}
+
+function handleDragOver(e) { e.preventDefault(); document.getElementById('uploadArea').style.borderColor='var(--cyan)'; }
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadArea').style.borderColor='';
+  if(e.dataTransfer.files[0]) handleFileSelect({ target:{ files: e.dataTransfer.files } });
+}
+
+// ═══════════════ JOBS LIST ═══════════════
+async function loadJobsList() {
+  showSection('jobs-list');
+  const result = await apiService.getAllJobs();
+  if (result.success) {
+    systemData.jobs = result.jobs || [];
+    displayAllJobs(systemData.jobs);
+  }
+}
+
+function displayAllJobs(jobs) {
+  const container = document.getElementById('jobsListContainer');
+  if(!jobs.length) {
+    container.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:3rem; font-family:var(--font-display);">No matching opportunities found</div>`;
+    return;
+  }
+  container.innerHTML = jobs.map(j => {
+    const initials = j.company.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    return `<div class="job-card" onclick="viewJobDetail('${j._id}')">
+      <div class="job-card-company">
+        <div class="job-company-badge">${initials}</div>
+        <div>
+          <div style="font-weight:600; color:var(--text-primary); font-size:0.85rem;">${j.company}</div>
+          <div class="job-company-name">Min CGPA: ${j.minCGPA}</div>
+        </div>
+      </div>
+      <div class="job-title">${j.title}</div>
+      <div class="skills-row">
+        ${j.requiredSkills.slice(0,4).map((s,i) => `<span class="skill-tag ${i%2?'skill-tag-violet':''}">${s}</span>`).join('')}
+        ${j.requiredSkills.length>4?`<span style="color:var(--text-muted); font-size:0.7rem; align-self:center;">+${j.requiredSkills.length-4} more</span>`:''}
+      </div>
+      <div class="job-meta-row">
+        <div class="job-salary">₹${j.salary} LPA</div>
+        <div class="job-deadline">📅 ${new Date(j.deadline).toLocaleDateString()}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterJobs() {
+  const search = document.getElementById('jobSearchInput').value.toLowerCase();
+  const skillF = document.getElementById('jobSkillsFilter').value.toLowerCase();
+  const cgpa = parseFloat(document.getElementById('jobCGPAFilter').value) || 0;
+  const filtered = systemData.jobs.filter(j =>
+    (j.company.toLowerCase().includes(search) || j.title.toLowerCase().includes(search)) &&
+    (skillF === '' || j.requiredSkills.some(s => s.toLowerCase().includes(skillF))) &&
+    (cgpa === 0 || j.minCGPA <= cgpa)
+  );
+  displayAllJobs(filtered);
+}
+
+// ═══════════════ JOB DETAIL ═══════════════
+async function viewJobDetail(id) {
+  const result = await apiService.getJob(id);
+  if (!result.success || !result.job) {
+    showToast('Job not found', 'error');
+    return;
+  }
+  
+  const job = result.job;
+  showSection('job-detail');
+  const ms = apiService.currentUser?.role === 'student' 
+    ? apiService.calculateMatchScore(apiService.currentUser.cgpa, apiService.currentUser.skills || [], job) 
+    : null;
+  const initials = job.company.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+
+  document.getElementById('jobDetailContainer').innerHTML = `
+    <div class="job-detail-card">
+      <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start; margin-bottom:2rem;">
+        <div style="width:64px; height:64px; border-radius:16px; background:linear-gradient(135deg, var(--violet-dim), var(--cyan-dim)); border:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:800; font-size:1.3rem; color:var(--cyan); flex-shrink:0;">${initials}</div>
+        <div style="flex:1;">
+          <div style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:var(--text-primary); letter-spacing:-0.5px; margin-bottom:0.2rem;">${job.title}</div>
+          <div style="color:var(--text-muted); font-size:0.9rem; margin-bottom:0.8rem;">${job.company}</div>
+          <div style="display:flex; flex-wrap:wrap; gap:0.8rem;">
+            <span class="badge badge-cyan">₹${job.salary} LPA</span>
+            <span class="badge badge-warning">Min CGPA ${job.minCGPA}</span>
+            <span class="badge" style="background:var(--violet-dim); color:var(--violet); border:1px solid rgba(167,139,250,0.2);">📅 ${new Date(job.deadline).toLocaleDateString()}</span>
+            ${ms !== null ? `<span class="badge" style="background:var(--green-dim); color:var(--green); border:1px solid rgba(16,255,176,0.2);">⚡ ${ms}% match</span>` : ''}
+          </div>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--border-subtle); padding-top:1.5rem; margin-bottom:1.5rem;">
+        <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:0.6rem;">About the Role</div>
+        <p style="color:var(--text-secondary); line-height:1.7; font-size:0.9rem;">${job.description}</p>
+      </div>
+
+      <div style="margin-bottom:1.5rem;">
+        <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:0.8rem;">Required Skills</div>
+        <div class="skills-row">
+          ${job.requiredSkills.map((s,i) => `<span class="skill-tag ${i%2?'skill-tag-violet':''}">${s}</span>`).join('')}
+        </div>
+      </div>
+
+      ${apiService.currentUser ? `
+        <div style="border-top:1px solid var(--border-subtle); padding-top:1.5rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+          <button class="btn-primary" onclick="openJobApplicationForm('${job._id}')">Apply Now →</button>
+        </div>$ : ''}
+    </div>`;
+}
+
+function goBackToJobs() { loadJobsList(); }
+
+// ═══════════════ APPLICATION ═══════════════
+async function openJobApplicationForm(jobId) {
+  if (!apiService.currentUser) {
+    showToast('Please login to apply', 'error');
+    return;
+  }
+  
+  const student = apiService.currentUser;
+  if(!student.resumePath) { 
+    showToast('Please upload your resume first', 'warn'); 
+    openModal('uploadResumeModal'); 
+    return; 
+  }
+  
+  window.currentJobId = jobId;
+  const jobRes = await apiService.getJob(jobId);
+  if (jobRes.success) {
+    const job = jobRes.job;
+    document.getElementById('appJobTitle').innerHTML = `${job.title} <span style="color:var(--text-muted);">at</span> ${job.company}`;
+    openModal('applicationModal');
+  }
+}
+
+async function submitJobApplication(e) {
+  e.preventDefault();
+  const jobId = window.currentJobId;
+  
+  const result = await apiService.applyForJob(jobId);
+  
+  if (result.success) {
+    closeModal('applicationModal');
+    document.getElementById('applicationModal').querySelector('form').reset();
+    showToast('Application submitted successfully!');
+    loadStudentDashboard();
+  } else {
+    showAlert('appAlert', '⚠ ' + (result.message || 'Failed to submit application'), 'error');
+  }
+}
+
+// ═══════════════ MISC ═══════════════
+function showAlert(elId, msg, type) {
+  const el = document.getElementById(elId);
+  if(el) {
+    el.innerHTML = `<div class="alert-${type}">${msg}</div>`;
+    setTimeout(() => el.innerHTML = '', 3000);
+  }
+}
+
+// Toast notification system
+function showToast(msg, type='success') {
+  const existing = document.getElementById('toastNotif');
+  if(existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.id = 'toastNotif';
+  const colors = { success:['var(--green)','rgba(16,255,176,0.1)','rgba(16,255,176,0.2)'], warn:['var(--amber)','rgba(255,179,71,0.1)','rgba(255,179,71,0.2)'], error:['var(--red)','rgba(255,77,106,0.1)','rgba(255,77,106,0.2)'] };
+  const [c, bg, border] = colors[type]||colors.success;
+  toast.style.cssText = `position:fixed; bottom:2rem; right:2rem; z-index:9999; padding:0.85rem 1.4rem; background:${bg}; border:1px solid ${border}; color:${c}; border-radius:12px; font-family:var(--font-display); font-size:0.82rem; font-weight:600; backdrop-filter:blur(12px); box-shadow:0 8px 24px rgba(0,0,0,0.4); animation:toastIn 0.3s cubic-bezier(0.16,1,0.3,1);`;
+  toast.innerText = msg;
+  const style = document.createElement('style');
+  style.innerText = '@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}';
+  document.head.appendChild(style);
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// ═══════════════ EVENT LISTENERS ═══════════════
+document.getElementById('registerRole')?.addEventListener('change', function() {
+  document.getElementById('studentFields').style.display = this.value === 'student' ? 'block' : 'none';
+});
+
+document.getElementById('jobSearchInput')?.addEventListener('keyup', filterJobs);
+document.getElementById('jobSkillsFilter')?.addEventListener('keyup', filterJobs);
+document.getElementById('jobCGPAFilter')?.addEventListener('input', filterJobs);
+
+// Init
+initializeApp();
+
+// ═══════════════ ADMIN & RECRUITER (PLACEHOLDER) ═══════════════
+// Note: Admin and Recruiter features can be fully integrated with APIs in future
+function loadAdminDashboard() {
+  showToast('Admin features coming soon', 'warn');
+  showSection('student-dashboard');
+}
+
+function loadRecruiterDashboard() {
+  showToast('Recruiter features coming soon', 'warn');
+  showSection('student-dashboard');
+}
+
+function handlePostJob(e) {
+  e.preventDefault();
+  showToast('Job posting features coming soon', 'warn');
+  closeModal('postJobModal');
+}
+
+function deleteJob(id) {
+  showToast('Job deletion feature coming soon', 'warn');
+}
+
+function viewStudentDetail(id) {
+  showToast('Student detail view coming soon', 'warn');
+}
+
+function updateAppStatus(appId, status) {
+  showToast('Status update coming soon', 'warn');
+}
+
+</script>
+
+// ═══════════════ STUDENT ═══════════════
+function loadStudentDashboard() {
+  const s = systemData.students.find(st => st.id === systemData.currentUser.id);
+  if(!s) return;
+  document.getElementById('studentName').innerText = s.name;
+  document.getElementById('studentEmail').innerText = s.email;
+  document.getElementById('studentRoll').innerText = s.rollNumber || 'N/A';
+  document.getElementById('studentDept').innerText = s.department;
+  document.getElementById('studentCGPA').innerText = s.cgpa;
+  document.getElementById('profileAvatar').innerText = s.name.charAt(0).toUpperCase();
+  document.getElementById('resumeStatusStat').innerText = s.resumeURL ? 'Ready' : 'Missing';
+
+  const completion = (s.resumeURL ? 40 : 0) + ((s.skills?.length || 0) > 0 ? 35 : 0) + (s.about ? 25 : 0);
+  document.getElementById('completionFill').style.width = completion + '%';
+  document.getElementById('completionPercent').innerText = completion + '%';
+  document.getElementById('profileCompletionText').innerHTML = completion < 100
+    ? `Profile is <span>${completion}%</span> complete — add ${!s.resumeURL?'resume, ':''}${!s.skills?.length?'skills, ':''}${!s.about?'bio':''}to boost AI matches`
+    : `Profile is <span>100%</span> complete — you're ready to get placed!`;
+
+  document.getElementById('recommendedCount').innerText = systemData.jobs.filter(j => s.cgpa >= j.minCGPA).length;
+  const apps = systemData.applications.filter(a => a.studentId === s.id);
+  document.getElementById('appliedCount').innerText = apps.length;
+  document.getElementById('shortlistedCount').innerText = apps.filter(a => a.status === 'shortlisted').length;
+
+  loadRecommendedJobs(s);
+  loadApplications(s);
+}
+
+function calculateMatch(s, job) {
+  let score = (s.cgpa >= job.minCGPA) ? 30 : 15;
+  const matched = job.requiredSkills.filter(sk =>
+    (s.skills||[]).some(usk => usk.toLowerCase().includes(sk.toLowerCase()) || sk.toLowerCase().includes(usk.toLowerCase()))
+  ).length;
+  score += (matched / Math.max(1, job.requiredSkills.length)) * 60;
+  if(s.resumeURL) score += 10;
+  return Math.min(100, Math.round(score));
+}
+
+function loadRecommendedJobs(s) {
+  const matches = systemData.jobs.filter(job => s.cgpa >= job.minCGPA)
+    .sort((a,b) => calculateMatch(s,b) - calculateMatch(s,a));
+  const tbody = document.getElementById('recommendedJobsBody');
+  if(!matches.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">Complete your profile to unlock AI-powered job matches</td></tr>';
+    return;
+  }
+  tbody.innerHTML = matches.map(job => {
+    const applied = systemData.applications.some(a => a.studentId===s.id && a.jobId===job.id);
+    const ms = calculateMatch(s, job);
+    const scoreColor = ms >= 70 ? 'var(--green)' : ms >= 45 ? 'var(--amber)' : 'var(--text-muted)';
+    return `<tr>
+      <td><strong style="color:var(--text-primary);">${job.company}</strong></td>
+      <td>${job.title}</td>
+      <td><span style="font-family:var(--font-display); font-weight:700; color:${scoreColor}; font-size:0.95rem;">${ms}%</span></td>
+      <td><span style="color:var(--amber); font-weight:600;">₹${job.salary} LPA</span></td>
+      <td>${applied
+        ? '<span class="badge badge-success">Applied</span>'
+        : `<button class="btn-cyber" style="padding:5px 14px; font-size:0.7rem;" onclick="openJobApplicationForm(${job.id})">Apply</button>`
+      }</td>
+    </tr>`;
+  }).join('');
+}
+
+function loadApplications(s) {
+  const apps = systemData.applications.filter(a => a.studentId === s.id);
+  const tbody = document.getElementById('applicationsBody');
+  if(!apps.length) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:2rem;">No applications submitted yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = apps.map(app => {
+    const job = systemData.jobs.find(j => j.id === app.jobId);
+    const statusMap = { applied:'badge-warning', shortlisted:'badge-success', rejected:'badge-danger', selected:'badge-success' };
+    return `<tr>
+      <td><strong style="color:var(--text-primary);">${job?.company}</strong></td>
+      <td>${job?.title}</td>
+      <td style="color:var(--text-muted);">${new Date(app.appliedAt).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'})}</td>
+      <td><span class="badge ${statusMap[app.status]||'badge-warning'}">${app.status}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══════════════ ADMIN ═══════════════
+function loadAdminDashboard() {
+  document.getElementById('totalStudents').innerText = systemData.students.length;
+  document.getElementById('totalJobs').innerText = systemData.jobs.length;
+  document.getElementById('totalApplications').innerText = systemData.applications.length;
+  document.getElementById('totalSelected').innerText = systemData.applications.filter(a => a.status==='selected').length;
+
+  document.getElementById('jobsTableBody').innerHTML = systemData.jobs.map(job => `
+    <tr>
+      <td><strong style="color:var(--text-primary);">${job.company}</strong></td>
+      <td>${job.title}</td>
+      <td>${job.requiredSkills.slice(0,3).map(s=>`<span class="skill-tag" style="margin-right:3px;">${s}</span>`).join('')}</td>
+      <td><span class="badge badge-cyan">${systemData.applications.filter(a=>a.jobId===job.id).length}</span></td>
+      <td style="color:var(--text-muted);">${job.deadline}</td>
+      <td><button class="btn-danger" onclick="deleteJob(${job.id})">Delete</button></td>
+    </tr>`).join('') || '<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:2rem;">No job listings yet</td></tr>';
+
+  document.getElementById('studentsTableBody').innerHTML = systemData.students.map(s => `
+    <tr>
+      <td><strong style="color:var(--text-primary);">${s.name}</strong></td>
+      <td style="color:var(--text-muted);">${s.email}</td>
+      <td><span class="badge badge-cyan">${s.department}</span></td>
+      <td style="color:var(--cyan); font-weight:700;">${s.cgpa}</td>
+      <td>${s.resumeURL ? '<span class="badge badge-success">Uploaded</span>' : '<span class="badge badge-danger">Missing</span>'}</td>
+      <td><button class="btn-ghost" style="font-size:0.75rem; padding:5px 12px;" onclick="viewStudentDetail(${s.id})">View</button></td>
+    </tr>`).join('') || '<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:2rem;">No students registered</td></tr>';
+}
+
+// ═══════════════ RECRUITER ═══════════════
+function loadRecruiterDashboard() {
+  const myJobs = systemData.jobs.filter(j => j.postedBy === systemData.currentUser.id);
+  const apps = systemData.applications.filter(a => myJobs.some(j => j.id === a.jobId));
+  document.getElementById('recruiterJobCount').innerText = myJobs.length;
+  document.getElementById('recruiterAppCount').innerText = apps.length;
+  document.getElementById('recruiterShortlist').innerText = apps.filter(a => a.status === 'shortlisted').length;
+
+  document.getElementById('recruiterApplicationsBody').innerHTML = apps.map(app => {
+    const student = systemData.students.find(s => s.id === app.studentId);
+    const job = systemData.jobs.find(j => j.id === app.jobId);
+    const statusMap = { applied:'badge-warning', shortlisted:'badge-success', rejected:'badge-danger' };
+    return `<tr>
+      <td><strong style="color:var(--text-primary);">${student?.name || '—'}</strong></td>
+      <td>${job?.title || '—'}</td>
+      <td style="color:var(--text-muted);">${new Date(app.appliedAt).toLocaleDateString()}</td>
+      <td><span class="badge ${statusMap[app.status]||'badge-warning'}">${app.status}</span></td>
+      <td style="display:flex; gap:0.5rem;">
+        <button class="btn-secondary" style="font-size:0.7rem; padding:5px 12px;" onclick="updateAppStatus(${app.id},'shortlisted')">⭐ Shortlist</button>
+        <button class="btn-amber" style="font-size:0.7rem; padding:5px 12px;" onclick="updateAppStatus(${app.id},'selected')">✓ Select</button>
+        <button class="btn-danger" style="font-size:0.7rem; padding:5px 12px;" onclick="updateAppStatus(${app.id},'rejected')">✗ Reject</button>
+      </td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">No applications yet</td></tr>';
+}
+
+function updateAppStatus(appId, status) {
+  const app = systemData.applications.find(a => a.id === appId);
+  if(app) { app.status = status; loadRecruiterDashboard(); showToast(`Candidate ${status} successfully`); }
+}
+
+// ═══════════════ JOB POSTING ═══════════════
+function handlePostJob(e) {
+  e.preventDefault();
+  const job = {
+    id: Date.now(),
+    company: document.getElementById('companyName').value,
+    title: document.getElementById('jobTitle').value,
+    description: document.getElementById('jobDescription').value,
+    requiredSkills: document.getElementById('requiredSkills').value.split(',').map(s=>s.trim()).filter(Boolean),
+    minCGPA: parseFloat(document.getElementById('minCGPA').value),
+    salary: parseFloat(document.getElementById('salary').value),
+    deadline: document.getElementById('deadline').value,
+    postedBy: systemData.currentUser.id
+  };
+  systemData.jobs.push(job);
+  closeModal('postJobModal');
+  document.getElementById('postJobModal').querySelector('form').reset();
+  if(systemData.currentUser.role === 'admin') loadAdminDashboard(); else loadRecruiterDashboard();
+  showToast('Job listing published successfully');
+}
+
+// ═══════════════ PROFILE ═══════════════
+function handleUpdateProfile(e) {
+  e.preventDefault();
+  const s = systemData.students.find(st => st.id === systemData.currentUser.id);
+  s.skills = document.getElementById('skillsInput').value.split(',').map(x=>x.trim()).filter(Boolean);
+  s.about = document.getElementById('aboutInput').value;
+  closeModal('editProfileModal');
+  loadStudentDashboard();
+  showToast('Profile updated');
+}
+
+// ═══════════════ RESUME ═══════════════
+function handleFileSelect(e) {
+  const file = e.target.files[0];
+  if(file) {
+    const s = systemData.students.find(st => st.id === systemData.currentUser.id);
+    s.resumeURL = URL.createObjectURL(file);
+    document.getElementById('resumePreview').innerHTML =
+      `<div class="alert-success"><strong>✓ Uploaded:</strong> ${file.name} (${(file.size/1024).toFixed(1)} KB)</div>`;
+    setTimeout(() => { closeModal('uploadResumeModal'); loadStudentDashboard(); }, 1000);
+  }
+}
+
+function handleDragOver(e) { e.preventDefault(); document.getElementById('uploadArea').style.borderColor='var(--cyan)'; }
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadArea').style.borderColor='';
+  if(e.dataTransfer.files[0]) handleFileSelect({ target:{ files: e.dataTransfer.files } });
+}
+
+// ═══════════════ JOBS LIST ═══════════════
+function loadJobsList() {
+  showSection('jobs-list');
+  displayAllJobs(systemData.jobs);
+}
+
+function displayAllJobs(jobs) {
+  const container = document.getElementById('jobsListContainer');
+  if(!jobs.length) {
+    container.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:3rem; font-family:var(--font-display);">No matching opportunities found</div>`;
+    return;
+  }
+  container.innerHTML = jobs.map(j => {
+    const initials = j.company.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    return `<div class="job-card" onclick="viewJobDetail(${j.id})">
+      <div class="job-card-company">
+        <div class="job-company-badge">${initials}</div>
+        <div>
+          <div style="font-weight:600; color:var(--text-primary); font-size:0.85rem;">${j.company}</div>
+          <div class="job-company-name">Min CGPA: ${j.minCGPA}</div>
+        </div>
+      </div>
+      <div class="job-title">${j.title}</div>
+      <div class="skills-row">
+        ${j.requiredSkills.slice(0,4).map((s,i) => `<span class="skill-tag ${i%2?'skill-tag-violet':''}">${s}</span>`).join('')}
+        ${j.requiredSkills.length>4?`<span style="color:var(--text-muted); font-size:0.7rem; align-self:center;">+${j.requiredSkills.length-4} more</span>`:''}
+      </div>
+      <div class="job-meta-row">
+        <div class="job-salary">₹${j.salary} LPA</div>
+        <div class="job-deadline">📅 ${j.deadline}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterJobs() {
+  const search = document.getElementById('jobSearchInput').value.toLowerCase();
+  const skillF = document.getElementById('jobSkillsFilter').value.toLowerCase();
+  const cgpa = parseFloat(document.getElementById('jobCGPAFilter').value) || 0;
+  const filtered = systemData.jobs.filter(j =>
+    (j.company.toLowerCase().includes(search) || j.title.toLowerCase().includes(search)) &&
+    (skillF === '' || j.requiredSkills.some(s => s.toLowerCase().includes(skillF))) &&
+    (cgpa === 0 || j.minCGPA <= cgpa)
+  );
+  displayAllJobs(filtered);
+}
+
+// ═══════════════ JOB DETAIL ═══════════════
+function viewJobDetail(id) {
+  const job = systemData.jobs.find(j => j.id === id);
+  if(!job) return;
+  showSection('job-detail');
+  const student = systemData.currentUser?.role==='student'
+    ? systemData.students.find(s => s.id === systemData.currentUser.id) : null;
+  const already = student ? systemData.applications.some(a => a.studentId===student.id && a.jobId===id) : false;
+  const ms = student ? calculateMatch(student, job) : null;
+  const initials = job.company.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+
+  document.getElementById('jobDetailContainer').innerHTML = `
+    <div class="job-detail-card">
+      <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start; margin-bottom:2rem;">
+        <div style="width:64px; height:64px; border-radius:16px; background:linear-gradient(135deg, var(--violet-dim), var(--cyan-dim)); border:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:800; font-size:1.3rem; color:var(--cyan); flex-shrink:0;">${initials}</div>
+        <div style="flex:1;">
+          <div style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:var(--text-primary); letter-spacing:-0.5px; margin-bottom:0.2rem;">${job.title}</div>
+          <div style="color:var(--text-muted); font-size:0.9rem; margin-bottom:0.8rem;">${job.company}</div>
+          <div style="display:flex; flex-wrap:wrap; gap:0.8rem;">
+            <span class="badge badge-cyan">₹${job.salary} LPA</span>
+            <span class="badge badge-warning">Min CGPA ${job.minCGPA}</span>
+            <span class="badge" style="background:var(--violet-dim); color:var(--violet); border:1px solid rgba(167,139,250,0.2);">📅 ${job.deadline}</span>
+            ${ms !== null ? `<span class="badge" style="background:var(--green-dim); color:var(--green); border:1px solid rgba(16,255,176,0.2);">⚡ ${ms}% match</span>` : ''}
+          </div>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--border-subtle); padding-top:1.5rem; margin-bottom:1.5rem;">
+        <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:0.6rem;">About the Role</div>
+        <p style="color:var(--text-secondary); line-height:1.7; font-size:0.9rem;">${job.description}</p>
+      </div>
+
+      <div style="margin-bottom:1.5rem;">
+        <div style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:0.8rem;">Required Skills</div>
+        <div class="skills-row">
+          ${job.requiredSkills.map((s,i) => `<span class="skill-tag ${i%2?'skill-tag-violet':''}">${s}</span>`).join('')}
+        </div>
+      </div>
+
+      ${student ? `
+        <div style="border-top:1px solid var(--border-subtle); padding-top:1.5rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+          ${already
+            ? '<span class="badge badge-success" style="padding:10px 20px; font-size:0.8rem;">✓ You have applied for this role</span>'
+            : `<button class="btn-primary" onclick="openJobApplicationForm(${job.id})">Apply Now →</button>`
+          }
+        </div>` : ''}
+    </div>`;
+}
+
+function goBackToJobs() { loadJobsList(); }
+
+// ═══════════════ APPLICATION ═══════════════
+function openJobApplicationForm(jobId) {
+  const s = systemData.students.find(st => st.id === systemData.currentUser.id);
+  if(!s.resumeURL) { showToast('Please upload your resume first', 'warn'); openModal('uploadResumeModal'); return; }
+  if(systemData.applications.some(a => a.studentId===s.id && a.jobId===jobId)) { showToast('Already applied to this role'); return; }
+  window.currentJobId = jobId;
+  const job = systemData.jobs.find(j => j.id === jobId);
+  document.getElementById('appJobTitle').innerHTML = `${job.title} <span style="color:var(--text-muted);">at</span> ${job.company}`;
+  openModal('applicationModal');
+}
+
+function submitJobApplication(e) {
+  e.preventDefault();
+  const student = systemData.students.find(s => s.id === systemData.currentUser.id);
+  const jobId = window.currentJobId;
+  const job = systemData.jobs.find(j => j.id === jobId);
+  if(student.cgpa < job.minCGPA) {
+    showToast(`Minimum CGPA required is ${job.minCGPA}`, 'error');
+    return;
+  }
+  const app = {
+    id: Date.now(), jobId, studentId: student.id,
+    appliedAt: new Date().toISOString(), status: 'applied',
+    coverLetter: document.getElementById('coverLetterInput').value
+  };
+  systemData.applications.push(app);
+  student.applications.push(app);
+  closeModal('applicationModal');
+  document.getElementById('applicationModal').querySelector('form').reset();
+  showToast('Application submitted successfully!');
+  loadStudentDashboard();
+}
+
+// ═══════════════ MISC ═══════════════
+function deleteJob(id) {
+  if(confirm('Delete this job listing?')) {
+    systemData.jobs = systemData.jobs.filter(j => j.id !== id);
+    loadAdminDashboard();
+    showToast('Job listing removed');
+  }
+}
+
+function viewStudentDetail(id) {
+  const s = systemData.students.find(st => st.id === id);
+  const apps = systemData.applications.filter(a => a.studentId === id);
+  alert(`── Student Profile ──\n\nName: ${s.name}\nEmail: ${s.email}\nDept: ${s.department}\nCGPA: ${s.cgpa}\nRoll: ${s.rollNumber||'N/A'}\n\nSkills: ${s.skills?.join(', ')||'None added'}\nBio: ${s.about||'—'}\nResume: ${s.resumeURL?'Uploaded':'Not uploaded'}\nApplications: ${apps.length}`);
+}
+
+function showAlert(elId, msg, type) {
+  const el = document.getElementById(elId);
+  if(el) {
+    el.innerHTML = `<div class="alert-${type}">${msg}</div>`;
+    setTimeout(() => el.innerHTML = '', 3000);
+  }
+}
+
+// Toast notification system
+function showToast(msg, type='success') {
+  const existing = document.getElementById('toastNotif');
+  if(existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.id = 'toastNotif';
+  const colors = { success:['var(--green)','rgba(16,255,176,0.1)','rgba(16,255,176,0.2)'], warn:['var(--amber)','rgba(255,179,71,0.1)','rgba(255,179,71,0.2)'], error:['var(--red)','rgba(255,77,106,0.1)','rgba(255,77,106,0.2)'] };
+  const [c, bg, border] = colors[type]||colors.success;
+  toast.style.cssText = `position:fixed; bottom:2rem; right:2rem; z-index:9999; padding:0.85rem 1.4rem; background:${bg}; border:1px solid ${border}; color:${c}; border-radius:12px; font-family:var(--font-display); font-size:0.82rem; font-weight:600; backdrop-filter:blur(12px); box-shadow:0 8px 24px rgba(0,0,0,0.4); animation:toastIn 0.3s cubic-bezier(0.16,1,0.3,1);`;
+  toast.innerText = msg;
+  const style = document.createElement('style');
+  style.innerText = '@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}';
+  document.head.appendChild(style);
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// ═══════════════ EVENT LISTENERS ═══════════════
+document.getElementById('registerRole').addEventListener('change', function() {
+  document.getElementById('studentFields').style.display = this.value === 'student' ? 'block' : 'none';
+});
+
+document.getElementById('jobSearchInput')?.addEventListener('keyup', filterJobs);
+document.getElementById('jobSkillsFilter')?.addEventListener('keyup', filterJobs);
+document.getElementById('jobCGPAFilter')?.addEventListener('input', filterJobs);
+
+// Init
+updateNavbar();
+</script>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        input[type="file"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="number"]:focus,
+        input[type="file"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .skills-info {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit {
+            background-color: #667eea;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background-color: #556cd6;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-reset {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-reset:hover {
+            background-color: #d0d0d0;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            display: block;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            display: block;
+        }
+
+        .spinner {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .spinner.show {
+            display: block;
+        }
+
+        .spinner::after {
+            content: " Loading...";
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .password-strength {
+            margin-top: 5px;
+            font-size: 12px;
+            height: 4px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background-color 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Registration</h1>
+        
+        <form id="registrationForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    placeholder="Enter your full name" 
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="Enter your email" 
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="Min 6 chars (letters + numbers)" 
+                    required
+                >
+                <div class="password-strength">
+                    <div class="password-strength-bar" id="strengthBar"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="cgpa">CGPA (0-10) *</label>
+                <input 
+                    type="number" 
+                    id="cgpa" 
+                    name="cgpa" 
+                    placeholder="e.g., 8.5" 
+                    min="0" 
+                    max="10" 
+                    step="0.01"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="department">Department *</label>
+                <select id="department" name="department" required>
+                    <option value="">Select your department</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Mechanical">Mechanical</option>
+                    <option value="Civil">Civil</option>
+                    <option value="Electrical">Electrical</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="skills">Skills *</label>
+                <textarea 
+                    id="skills" 
+                    name="skills" 
+                    placeholder="Enter skills separated by commas&#10;e.g., JavaScript, Python, React, Node.js" 
+                    required
+                ></textarea>
+                <div class="skills-info">Enter multiple skills separated by commas</div>
+            </div>
+
+            <div class="form-group">
+                <label for="resume">Resume Upload *</label>
+                <input 
+                    type="file" 
+                    id="resume" 
+                    name="resume" 
+                    accept=".pdf,.doc,.docx" 
+                    required
+                >
+                <div class="skills-info">Only PDF, DOC, or DOCX files (Max 5MB)</div>
+            </div>
+
+            <div class="buttons">
+                <button type="submit" class="btn-submit">Register</button>
+                <button type="reset" class="btn-reset">Clear</button>
+            </div>
+        </form>
+
+        <div id="message" class="message"></div>
+        <div id="spinner" class="spinner"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+
+        const form = document.getElementById('registrationForm');
+        const messageDiv = document.getElementById('message');
+        const spinnerDiv = document.getElementById('spinner');
+        const passwordInput = document.getElementById('password');
+        const strengthBar = document.getElementById('strengthBar');
+
+        // Password strength indicator
+        passwordInput.addEventListener('input', (e) => {
+            const password = e.target.value;
+            let strength = 0;
+
+            if (password.length >= 6) strength += 25;
+            if (password.length >= 10) strength += 25;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 25;
+            if (/\d/.test(password) && /[!@#$%^&*]/.test(password)) strength += 25;
+
+            strengthBar.style.width = strength + '%';
+            
+            if (strength < 50) {
+                strengthBar.style.backgroundColor = '#dc3545';
+            } else if (strength < 75) {
+                strengthBar.style.backgroundColor = '#ffc107';
+            } else {
+                strengthBar.style.backgroundColor = '#28a745';
+            }
+        });
+
+        // Form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Clear previous messages
+            messageDiv.className = 'message';
+            messageDiv.textContent = '';
+
+            try {
+                spinnerDiv.classList.add('show');
+
+                // Create FormData object
+                const formData = new FormData(form);
+
+                // Make API call
+                const response = await fetch(`${API_URL}/students/register`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                spinnerDiv.classList.remove('show');
+
+                if (response.ok) {
+                    messageDiv.className = 'message success';
+                    messageDiv.innerHTML = `
+                        <strong>Success!</strong> Student registered successfully.<br>
+                        Email: ${data.student.email}<br>
+                        CGPA: ${data.student.cgpa}<br>
+                        <small>Resume saved as: ${data.student.resumePath}</small>
+                    `;
+                    form.reset();
+                    strengthBar.style.width = '0%';
+                } else {
+                    messageDiv.className = 'message error';
+                    if (data.errors) {
+                        const errorList = data.errors.map(e => e.msg).join('<br>');
+                        messageDiv.innerHTML = `<strong>Errors:</strong><br>${errorList}`;
+                    } else {
+                        messageDiv.innerHTML = `<strong>Error:</strong> ${data.message}`;
+                    }
+                }
+            } catch (error) {
+                spinnerDiv.classList.remove('show');
+                messageDiv.className = 'message error';
+                messageDiv.innerHTML = `<strong>Error:</strong> ${error.message}. Make sure the API server is running on http://localhost:5000`;
+            }
+        });
+
+        // Check if API is running on page load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch(`${API_URL.replace('/api', '')}/api/health`);
+                if (!response.ok) {
+                    console.warn('API server not responding');
+                }
+            } catch (error) {
+                console.warn('API server is not running. Start it with: npm start (from backend folder)');
+            }
+        });
+    </script>
+</body>
+</html>
